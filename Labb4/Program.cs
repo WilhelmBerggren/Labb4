@@ -10,7 +10,7 @@ namespace Labb4
         public List<object> contents;
     }
     public class RoomTile : Tile
-    {
+    {// Provar commit
         public RoomTile() { this.representation = '.'; }
         public RoomTile(char representation)
         {
