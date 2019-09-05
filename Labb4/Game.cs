@@ -46,7 +46,7 @@ namespace Labb4
                 }
                 Console.WriteLine();
             }
-            Console.WriteLine($"lives: {player.lives}");
+            Console.WriteLine($"lives: {player.Lives}");
         }
     }
 }

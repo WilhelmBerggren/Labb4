@@ -4,7 +4,7 @@
     {
         public int PosX;
         public int PosY;
-        public int lives;
+        private int lives;
         public Player(int posX, int posY, int lives)
         {
             this.PosX = posX;
@@ -12,13 +12,15 @@
             this.lives = lives;
         }
 
+        public int Lives { get => lives; set => lives = (lives > 0) ? value : lives; }
+
         public void move(Tile t, int deltaX, int deltaY)
         {
             if (t.accessible)
             {
                 this.PosX += deltaX;
                 this.PosY += deltaY;
-                if (t.GetType() == typeof(MonsterTile)) lives--;
+                if (t.GetType() == typeof(MonsterTile)) Lives--;
             }
         }
     }

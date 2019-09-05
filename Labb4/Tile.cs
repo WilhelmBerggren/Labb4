@@ -2,10 +2,10 @@
 {
     // class Tile contains representation (char) holds just one sign.
     // bool accessible to check if it's accessible to step on, meaning if you can go to its position
-    public class Tile
+    public abstract class Tile
     {
-        public char representation;
-        public bool accessible;
+        public char representation  { get; set; }
+        public bool accessible { get; set; }
     }
 
     public class DoorTile : Tile
@@ -39,6 +39,15 @@
         public MonsterTile()
         {
             this.representation = 'M';
+            this.accessible = true;
+        }
+    }
+
+    public class KeyTile : Tile
+    {
+        public KeyTile()
+        {
+            this.representation = 'K';
             this.accessible = true;
         }
     }
