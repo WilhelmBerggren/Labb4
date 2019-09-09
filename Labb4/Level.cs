@@ -2,7 +2,7 @@
 
 namespace Labb4
 {
-    class Level
+    public class Level
     {
         public Tile[,] map;
         public int mapHeight;
