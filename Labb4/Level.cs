@@ -8,11 +8,11 @@ namespace Labb4
         public int mapHeight;
         public int mapWidth;
         public Dictionary<KeyTile, DoorTile> keyDoorDict;
-        public Level(int mapHeight, int mapWidth)
+        public Level(int mapWidth, int mapHeight)
         {
-            this.mapHeight = mapHeight;
             this.mapWidth = mapWidth;
-            this.map = new Tile[mapHeight, mapWidth];
+            this.mapHeight = mapHeight;
+            this.map = new Tile[mapWidth, mapHeight];
             this.keyDoorDict = new Dictionary<KeyTile, DoorTile>();
             SetTiles();
         }
@@ -67,21 +67,21 @@ namespace Labb4
         }
         public void SetTiles()
         {
-            this.map = Parser(room);
-            this.mapHeight = this.map.GetLength(0);
-            this.mapWidth = this.map.GetLength(1);
-            //for (int x = 0; x < this.mapWidth; x++)
-            //{
-            //    for (int y = 0; y < this.mapHeight; y++)
-            //    {
-            //        if (x == 3 && y == 4)
-            //            map[x, y] = new MonsterTile();
-            //        else if (x == 0 || y == 0 || x == this.mapHeight - 1 || y == this.mapWidth - 1)
-            //            map[x, y] = new WallTile();
-            //        else
-            //            map[x, y] = new RoomTile();
-            //    }
-            //}
+            //this.map = Parser(room);
+            this.mapWidth = this.map.GetLength(0);
+            this.mapHeight = this.map.GetLength(1);
+            for (int width = 0; width < this.mapWidth; width++)
+            {
+                for (int height = 0; height < this.mapHeight; height++)
+                {
+                    if (width == 3 && height == 4)
+                        map[width, height] = new MonsterTile();
+                    else if (width == 0 || height == 0 || width == this.mapWidth - 1 || height == this.mapHeight - 1)
+                        map[width, height] = new WallTile();
+                    else
+                        map[width, height] = new RoomTile();
+                }
+            }
         }
     }
 }
