@@ -6,10 +6,10 @@ namespace Labb4
 {
     public partial class Game : Form
     {
-        const int mapWidth = 16;
-        const int mapHeight = 9;
-        Level level = new Level(mapWidth, mapHeight);
+        const int tileSize = 50;
+        Level level;
         Player player = new Player(2, 2, 10);
+        Button legend = new Button();
 
             public Game()
             {
@@ -108,7 +108,6 @@ namespace Labb4
                     {
                         for (int y = 0; y < level.mapHeight; y++)
                         {
-                            //char c = (player.PosX == x && player.PosY == y) ? 'X' : level.map[x, y].representation;
                             char c = ' ';
                             if (DistanceFromPlayer(x, y, player) == 0)
                             {
