@@ -16,11 +16,19 @@
 
         public void move(Tile t, int deltaX, int deltaY)
         {
+            if (t == null)
+                return;
             if (t.accessible)
             {
                 this.PosX += deltaX;
                 this.PosY += deltaY;
                 if (t.GetType() == typeof(MonsterTile)) Lives--;
+                else if (t.GetType() == typeof(TrapTile)) Lives--;
+                else if (t.GetType() == typeof(KeyTile))
+                {
+                    KeyTile kt = (KeyTile)t;
+                    kt.doorTile.accessible = true;
+                }
             }
         }
     }

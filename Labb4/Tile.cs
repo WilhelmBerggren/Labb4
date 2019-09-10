@@ -13,7 +13,17 @@
         public DoorTile()
         {
             this.representation = 'D';
+            this.accessible = false;
+        }
+    }
+    public class ButtonTile : Tile
+    {
+        public TrapTile trapTile { get; set; }
+        public ButtonTile(TrapTile trapTile)
+        {
+            this.representation = 'B';
             this.accessible = true;
+            this.trapTile = trapTile;
         }
     }
 
@@ -25,6 +35,16 @@
             this.accessible = false;
         }
     }
+
+    public class CornerTile : Tile
+    {
+        public CornerTile()
+        {
+            this.representation = 'O';
+            this.accessible = false;
+        }
+    }
+
     public class RoomTile : Tile
     {
         public RoomTile()
@@ -45,9 +65,19 @@
 
     public class KeyTile : Tile
     {
-        public KeyTile()
+        public DoorTile doorTile { get; set; }
+        public KeyTile(DoorTile doorTile)
         {
+            this.doorTile = doorTile;
             this.representation = 'K';
+            this.accessible = true;
+        }
+    }
+    public class TrapTile : Tile
+    {
+        public TrapTile()
+        {
+            this.representation = 'T';
             this.accessible = true;
         }
     }
