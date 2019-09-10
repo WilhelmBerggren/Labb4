@@ -16,12 +16,21 @@
 
         public void move(Tile t, int deltaX, int deltaY)
         {
+            if (t == null)
+                return;
             if (t.accessible)
             {
                 this.PosX += deltaX;
                 this.PosY += deltaY;
                 this.moves++;
-                if (t.GetType() == typeof(MonsterTile)) this.moves += 10; // Adds 10 moves if player steps on a monster tile.
+
+                if (t.GetType() == typeof(MonsterTile)) this.moves += 10;
+                else if (t.GetType() == typeof(TrapTile)) this.moves += 10;
+                else if (t.GetType() == typeof(KeyTile))
+                {
+                    KeyTile kt = (KeyTile)t;
+                    kt.doorTile.accessible = true;
+                }
             }
         }
     }

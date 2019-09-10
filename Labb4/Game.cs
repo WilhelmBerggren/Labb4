@@ -6,10 +6,10 @@ namespace Labb4
 {
     public partial class Game : Form
     {
-        const int tileSize = 50;
-        Level level;
-        Player player = new Player(2, 2, 0);
-        public Button legend = new Button();
+        const int mapWidth = 16;
+        const int mapHeight = 9;
+        Level level = new Level(mapWidth, mapHeight);
+        Player player = new Player(2, 2, 10);
 
             public Game()
             {
@@ -40,16 +40,16 @@ namespace Labb4
             switch (e.KeyChar)
             {
                 case 'w':
-                    player.move(level.map[player.PosX, player.PosY - 1], 0, -1);
+                    MovePlayer(0, -1);
                     break;
                 case 'a':
-                    player.move(level.map[player.PosX - 1, player.PosY], -1, 0);
+                    MovePlayer(-1, 0);
                     break;
                 case 's':
-                    player.move(level.map[player.PosX, player.PosY + 1], 0, +1);
+                    MovePlayer(0, +1);
                     break;
                 case 'd':
-                    player.move(level.map[player.PosX + 1, player.PosY], +1, 0);
+                    MovePlayer(+1, 0);
                     break;
                 case 'l':
                     MessageBox.Show(LegendInfo());
@@ -58,7 +58,20 @@ namespace Labb4
                     Environment.Exit(0);
                     break;
             }
-            this.Refresh();
+            this.Invalidate();
+        }
+
+        private void MovePlayer(int deltaX, int deltaY)
+        {
+            int targetX = player.PosX + deltaX;
+            int targetY = player.PosY + deltaY;
+
+            if (targetX >= 0 && targetX < level.map.GetLength(0) &&
+                targetY >= 0 && targetY < level.map.GetLength(1))
+            {
+                player.move(level.map[targetX, targetY], deltaX, deltaY);
+            }
+
         }
 
         private string LegendInfo()

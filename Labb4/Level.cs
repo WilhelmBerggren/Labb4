@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Labb4
 {
@@ -7,81 +8,92 @@ namespace Labb4
         public Tile[,] map;
         public int mapHeight;
         public int mapWidth;
-        public Dictionary<KeyTile, DoorTile> keyDoorDict;
         public Level(int mapWidth, int mapHeight)
         {
             this.mapWidth = mapWidth;
             this.mapHeight = mapHeight;
             this.map = new Tile[mapWidth, mapHeight];
-            this.keyDoorDict = new Dictionary<KeyTile, DoorTile>();
-            SetTiles();
+            Generate();
         }
 
-
-        string[,] room = new string[,] {
-           { "#", "#", "#", "#", "#"},
-           { "#", "K1", ".", ".", "#"},
-           { "#", ".", "M", ".", "#"},
-           { "#", ".", ".", "D1", "#"},
-           { "#", "#", "#", "#", "#"},
-       };
-        Tile[,] Parser(string[,] input)
+        public void Generate()
         {
-            int width = input.GetLength(0);
-            int height = input.GetLength(1);
-            Tile[,] output = new Tile[width, height];
-            Dictionary<int, KeyTile> keys = new Dictionary<int, KeyTile>();
-            Dictionary<int, DoorTile> doors = new Dictionary<int, DoorTile>();
-
-            for (int i = 0; i < width; i++)
+            for (int row = 0; row < this.mapWidth; row++)
             {
-                for (int j = 0; j < height; j++)
+                for (int column = 0; column < mapHeight; column++)
                 {
-                    string s = input[i, j];
-                    switch (s)
+                    if (row == 0 || column == 0 || row == mapWidth - 1 || column == mapHeight - 1)
+                        if ((row == 0 && column == 0) ||
+                            (row == 0 && column == mapHeight - 1) ||
+                            (row == mapWidth - 1 && column == 0) ||
+                            (row == mapWidth - 1 && column == mapHeight - 1))
+                        {
+                            map[row, column] = new CornerTile();
+                        }
+                        else
+                            map[row, column] = new WallTile();
+                    else
+                        map[row, column] = new RoomTile();
+                }
+            }
+
+            PlaceKeyDoorPairs(new Random().Next(1, 3));
+            PlaceButtonTrapPairs(new Random().Next(1, 3));
+            PlaceMonsters(new Random().Next(1, 3));
+        }
+
+        public void PlaceMonsters(int monsters)
+        {
+            for (int i = 0; i < monsters; i++)
+            {
+                PlaceTile(new MonsterTile(), typeof(RoomTile));
+            }
+        }
+
+        public void PlaceKeyDoorPairs(int pairs)
+        {
+            for (int i = 0; i < pairs; i++)
+            {
+                DoorTile door = new DoorTile();
+                PlaceTile(new KeyTile(door), typeof(RoomTile));
+                PlaceTile(door, typeof(WallTile));
+            }
+        }
+
+        public void PlaceButtonTrapPairs(int pairs)
+        {
+            for (int i = 0; i < pairs; i++)
+            {
+                TrapTile trap = new TrapTile();
+                PlaceTile(new ButtonTile(trap), typeof(RoomTile));
+                PlaceTile(trap, typeof(RoomTile));
+            }
+        }
+
+        public bool PlaceTile(Tile newTile, Type oldTile)
+        {
+            bool[,] visited = new bool[map.GetLength(0), map.GetLength(1)];
+            int unvisitedCount = map.GetLength(0) * map.GetLength(1);
+            while (unvisitedCount > 0)
+            {
+                int posX = new Random().Next(0, this.mapWidth);
+                int posY = new Random().Next(0, this.mapHeight);
+
+                if (visited[posX, posY] != true)
+                {
+                    if (map[posX, posY].GetType() == oldTile)
                     {
-                        case "#":
-                            output[i, j] = new WallTile();
-                            break;
-                        case ".":
-                            output[i, j] = new RoomTile();
-                            break;
-                        case "M":
-                            output[i, j] = new MonsterTile();
-                            break;
-                        default:
-                            if(s.StartsWith("D"))
-                                doors.Add(int.Parse(s.Substring(1)), new DoorTile());
-                            else if(s.StartsWith("K"))
-                                keys.Add(int.Parse(s.Substring(1)), new KeyTile());
-                            output[i, j] = new RoomTile();
-                            break;
+                        map[posX, posY] = newTile;
+                        return true;
                     }
                 }
-            }
-
-            foreach(KeyValuePair<int, KeyTile> key in keys) {
-                this.keyDoorDict.Add(key.Value, doors[key.Key]);
-            }
-            return output;
-        }
-        public void SetTiles()
-        {
-            //this.map = Parser(room);
-            this.mapWidth = this.map.GetLength(0);
-            this.mapHeight = this.map.GetLength(1);
-            for (int width = 0; width < this.mapWidth; width++)
-            {
-                for (int height = 0; height < this.mapHeight; height++)
+                else
                 {
-                    if (width == 3 && height == 4)
-                        map[width, height] = new MonsterTile();
-                    else if (width == 0 || height == 0 || width == this.mapWidth - 1 || height == this.mapHeight - 1)
-                        map[width, height] = new WallTile();
-                    else
-                        map[width, height] = new RoomTile();
+                    visited[posX, posY] = true;
+                    unvisitedCount--;   
                 }
             }
+            return false;
         }
     }
 }
