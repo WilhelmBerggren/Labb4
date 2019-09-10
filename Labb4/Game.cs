@@ -8,8 +8,9 @@ namespace Labb4
     {
         const int tileSize = 50;
         Level level;
-        Player player = new Player(2, 2, 10);
+        Player player = new Player(2, 2, 0);
         Button legend = new Button();
+        //SolidBrush myBrush = new SolidBrush(Color.FromArgb(255,0,0));
 
             public Game()
             {
@@ -71,7 +72,6 @@ namespace Labb4
             {
                 player.move(level.map[targetX, targetY], deltaX, deltaY);
             }
-
         }
 
         private string LegendInfo()
@@ -89,7 +89,8 @@ namespace Labb4
                "\nCollect keys to unlock doors and walk on buttons to deactivate traps." +
                "\nStepping on monster tiles or trap tiles will add 10 moves." +
                "\n\nFinish the game by going through the door." +
-               "\nTry to finish the game in as few moves as possible!";
+               "\nTry to finish the game in as few moves as possible!" +
+               "\n\nPress '.' to close.";
         }
 
         private void Draw(object sender, PaintEventArgs e)
@@ -101,7 +102,6 @@ namespace Labb4
             using (Graphics g = this.CreateGraphics())
             {
                 g.Clear(SystemColors.Control); //Clear the draw area
-
                 using (Font font1 = new Font("Arial", 28, FontStyle.Bold, GraphicsUnit.Point))
                 {
                     for (int x = 0; x < level.mapWidth; x++)
@@ -109,6 +109,16 @@ namespace Labb4
                         for (int y = 0; y < level.mapHeight; y++)
                         {
                             char c = ' ';
+                            //if (level.map[x,y].GetType() == typeof(WallTile) ||
+                            //    level.map[x, y].GetType() == typeof(DoorTile) ||
+                            //    level.map[x, y].GetType() == typeof(CornerTile))
+                            //{
+                            //    c = level.map[x, y].representation;
+                            //}
+                            if (level.map[x,y].GetType() == typeof(DoorTile))
+                            {
+                                c = level.map[x, y].representation;
+                            }
                             if (DistanceFromPlayer(x, y, player) == 0)
                             {
                                 c = 'X';
@@ -117,15 +127,19 @@ namespace Labb4
                             {
                                 c = level.map[x, y].representation;
                             }
+                            Image b = Image.FromFile("brick.jpg");
                             Rectangle rect = new Rectangle(new Point(5 + step * x, 5 + step * y), new Size(width, height));
                             g.DrawString(c.ToString(), font1, Brushes.Blue, rect);
+                            if (level.map[x,y].GetType() == typeof(WallTile)||
+                                level.map[x,y].GetType() == typeof(CornerTile))
+                                g.DrawImage(b, rect);
                         }
                     }
                     Font movesFont = new Font("Arial", 15, FontStyle.Bold, GraphicsUnit.Point);
                     Rectangle moves = new Rectangle(new Point(tileSize * level.mapWidth, 10), new Size(80, 20));
-                    g.DrawString("Moves:", movesFont, Brushes.Blue, moves);
+                    g.DrawString("Moves:", movesFont, Brushes.Black, moves);
                     Rectangle movesCount = new Rectangle(new Point(tileSize * level.mapWidth, 30), new Size(80, 20));
-                    g.DrawString($"{player.Moves}", movesFont, Brushes.Blue, movesCount);
+                    g.DrawString($"{player.Moves}", movesFont, Brushes.Black, movesCount);
                 }
             }
         }
@@ -134,6 +148,12 @@ namespace Labb4
         {
             return (int) Math.Sqrt(Math.Pow((player.PosX - x), 2) + Math.Pow((player.PosY - y), 2));
         }
+
+        //static SolidBrush RandomBrush()
+        //{
+        //    SolidBrush[]
+        //    return new SolidBrush(Color.FromArgb(red, green, blue));
+        //}
 
         [STAThread]
         public void Start()

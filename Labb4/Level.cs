@@ -36,10 +36,9 @@ namespace Labb4
                         map[row, column] = new RoomTile();
                 }
             }
-
-            PlaceKeyDoorPairs(new Random().Next(1, 3));
-            PlaceButtonTrapPairs(new Random().Next(1, 3));
-            PlaceMonsters(new Random().Next(1, 3));
+            PlaceKeyDoorPairs(1);
+            PlaceButtonTrapPairs(1);
+            PlaceMonsters(1);
         }
 
         public void PlaceMonsters(int monsters)

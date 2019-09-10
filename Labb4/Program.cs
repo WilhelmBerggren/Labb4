@@ -18,18 +18,19 @@ namespace Labb4
  * If key is collected, enter the room. If key is NOT collected, display message.
  * 
  * WIN-Condition: Open the chest to win.
- * LOSE-Condition: Step on monsters enough times to reduce life to 0. Each step on a monster-tile reduces HP by 1.
+ * LOSE-Condition: Lose upon reaching 100 steps.
  * 
  * TODO: 
- * Implement and place two keys of separate colours.
- * Implement and place two door-tiles of separate colours
- *      and if-statements to see if the correct key is collected to open that specific door.
- *      
- * Implement an empty map except for the player and the walls.
- * Set the different tiles (such as door, keys, monsters) to only appear once the player is next to them, as per view distance.
- * Implement view distance to just a square around the player until a torch is collected.
- * Implement and place a torch. If torch is collected, change draw function to increase viewdistance
- * Randomize placement of torch, keys, doors, monsters and players.
+ * Implement a different colour or texture for every tile.
+ * Same color for key and door.
+ * 
+ * Implement an array to store maps (max 3 maps)
+ * Start at index 0 (first map), when you enter the door in map 1, you go to map 2. Chest at last map.
+ * 
+ * Implement feature to keep drawing tiles the player has already walked on.
+ * Implement feature to display highscore of number of moves when finishing game.
+ *      When finishing the game, display popup to grats user and restart. Save highscore.
+ * 
  */
 
 

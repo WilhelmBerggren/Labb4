@@ -1,11 +1,14 @@
-﻿namespace Labb4
+﻿using System.Drawing;
+namespace Labb4
 {
     // class Tile contains representation (char) holds just one sign.
     // bool accessible to check if it's accessible to step on, meaning if you can go to its position
     public abstract class Tile
     {
+        public Image rep { get; set; }
         public char representation  { get; set; }
         public bool accessible { get; set; }
+        public Brush color { get; set; }
     }
 
     public class DoorTile : Tile
@@ -14,6 +17,7 @@
         {
             this.representation = 'D';
             this.accessible = false;
+            this.color = Brushes.Black;
         }
     }
     public class ButtonTile : Tile
@@ -31,6 +35,7 @@
     {
         public WallTile()
         {
+            this.rep = Image.FromFile("brick.jpg");
             this.representation = '#';
             this.accessible = false;
         }
