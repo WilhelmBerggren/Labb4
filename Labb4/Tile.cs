@@ -20,6 +20,7 @@ namespace Labb4
             this.color = Brushes.Black;
         }
     }
+
     public class ButtonTile : Tile
     {
         public TrapTile trapTile { get; set; }
@@ -35,7 +36,6 @@ namespace Labb4
     {
         public WallTile()
         {
-            this.rep = Image.FromFile("brick.jpg");
             this.representation = '#';
             this.accessible = false;
         }
@@ -78,6 +78,7 @@ namespace Labb4
             this.accessible = true;
         }
     }
+
     public class TrapTile : Tile
     {
         public TrapTile()

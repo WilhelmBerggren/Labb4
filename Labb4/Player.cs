@@ -5,6 +5,7 @@
         public int PosX;
         public int PosY;
         private int moves;
+
         public Player(int posX, int posY, int moves)
         {
             this.PosX = posX;

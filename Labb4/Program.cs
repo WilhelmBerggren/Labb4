@@ -21,7 +21,6 @@ namespace Labb4
  * LOSE-Condition: Lose upon reaching 100 steps.
  * 
  * TODO: 
- * Implement a different colour or texture for every tile.
  * Same color for key and door.
  * 
  * Implement an array to store maps (max 3 maps)

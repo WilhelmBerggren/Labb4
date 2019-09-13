@@ -10,29 +10,36 @@ namespace Labb4
         Level level;
         Player player = new Player(2, 2, 0);
         Button legend = new Button();
-        //SolidBrush myBrush = new SolidBrush(Color.FromArgb(255,0,0));
+        Font font1 = new Font("Arial", 28, FontStyle.Bold, GraphicsUnit.Point);
 
-            public Game()
-            {
-                int windowWidth = 800;
-                int windowHeight = 450;
-                this.Size = new Size(windowWidth, windowHeight);
-                this.Paint += Draw;
-                int tilesWidth = windowWidth / tileSize - 2;
-                int tilesHeight = windowHeight / tileSize - 1;
-                this.level = new Level(tilesWidth, tilesHeight);
+        // Declarations here will be used in the method for drawing.
+        int step = tileSize; // distance between the rows and columns
+        int width = tileSize - 10; // the width of the rectangle
+        int height = tileSize - 10; // the height of the rectangle
 
-                this.KeyPreview = true;
-                this.KeyPress +=
-                    new KeyPressEventHandler(HandleKeypress);
+        public Game()
+        {
+            // Size of window and tiles
+            int windowWidth = 800;
+            int windowHeight = 450;
+            this.Size = new Size(windowWidth, windowHeight);
+            this.Paint += Draw;
+            int tilesWidth = windowWidth / tileSize - 2;
+            int tilesHeight = windowHeight / tileSize - 1;
+            this.level = new Level(tilesWidth, tilesHeight);
 
-                this.Controls.Add(legend);
-                legend.Size = new Size(60, 40);
-                legend.Location = new Point(700, 350);
-                legend.Text = "Legend";
-                legend.Click += new EventHandler(legendClick);
-            }
-        private void legendClick(object sender, EventArgs e)
+            // Keypress and Legend-button logic
+            this.KeyPreview = true;
+            this.KeyPress +=
+                new KeyPressEventHandler(HandleKeypress);
+            this.Controls.Add(legend);
+            legend.Size = new Size(60, 40);
+            legend.Location = new Point(700, 350);
+            legend.Text = "Legend";
+            legend.Click += new EventHandler(legendButtonClick);
+        }
+
+        private void legendButtonClick(object sender, EventArgs e)
         {
             MessageBox.Show(LegendInfo());
         }
@@ -59,7 +66,7 @@ namespace Labb4
                     Environment.Exit(0);
                     break;
             }
-            this.Invalidate();
+            this.Invalidate(); // Repaint map
         }
 
         private void MovePlayer(int deltaX, int deltaY)
@@ -76,84 +83,66 @@ namespace Labb4
 
         private string LegendInfo()
         {
-               return "Inaccessible Tiles:\n" +
-               "#: Wall Tiles\n" +
-               "O: Corner Tiles\n" +
-               "\nAccessilbe Tiles:\n" +
-               "K: Key Tiles\n" +
-               "T: Trap Tiles\n" +
-               "B: Button Tiles\n" +
-               "M: Monster Tiles\n" +
-               "\nConditional Tiles:\n" +
-               "D: Door Tiles\n" +
-               "\nCollect keys to unlock doors and walk on buttons to deactivate traps." +
-               "\nStepping on monster tiles or trap tiles will add 10 moves." +
-               "\n\nFinish the game by going through the door." +
-               "\nTry to finish the game in as few moves as possible!" +
-               "\n\nPress '.' to close.";
+            return "Inaccessible Tiles:\n" +
+            "#: Wall Tiles\n" +
+            "O: Corner Tiles\n" +
+            "\nAccessilbe Tiles:\n" +
+            "K: Key Tiles\n" +
+            "T: Trap Tiles\n" +
+            "B: Button Tiles\n" +
+            "M: Monster Tiles\n" +
+            "\nConditional Tiles:\n" +
+            "D: Door Tiles\n" +
+            "\nCollect keys to unlock doors and walk on buttons to deactivate traps." +
+            "\nStepping on monster tiles or trap tiles will add 10 moves." +
+            "\n\nFinish the game by going through the door." +
+            "\nTry to finish the game in as few moves as possible!" +
+            "\n\nPress '.' to close.";
         }
 
         private void Draw(object sender, PaintEventArgs e)
         {
-            int step = tileSize; //distance between the rows and columns
-            int width = tileSize - 10; //the width of the rectangle
-            int height = tileSize - 10; //the height of the rectangle
-
             using (Graphics g = this.CreateGraphics())
             {
-                g.Clear(SystemColors.Control); //Clear the draw area
-                using (Font font1 = new Font("Arial", 28, FontStyle.Bold, GraphicsUnit.Point))
+                for (int x = 0; x < level.mapWidth; x++)
                 {
-                    for (int x = 0; x < level.mapWidth; x++)
+                    for (int y = 0; y < level.mapHeight; y++)
                     {
-                        for (int y = 0; y < level.mapHeight; y++)
+                        char c = ' ';
+                        Rectangle rect = new Rectangle(new Point(5 + step * x, 5 + step * y), new Size(width, height));
+                        if (level.map[x, y].GetType() == typeof(DoorTile) ||
+                            level.map[x, y].GetType() == typeof(WallTile) ||
+                            level.map[x, y].GetType() == typeof(CornerTile))
                         {
-                            char c = ' ';
-                            //if (level.map[x,y].GetType() == typeof(WallTile) ||
-                            //    level.map[x, y].GetType() == typeof(DoorTile) ||
-                            //    level.map[x, y].GetType() == typeof(CornerTile))
-                            //{
-                            //    c = level.map[x, y].representation;
-                            //}
-                            if (level.map[x,y].GetType() == typeof(DoorTile))
-                            {
-                                c = level.map[x, y].representation;
-                            }
-                            if (DistanceFromPlayer(x, y, player) == 0)
-                            {
-                                c = 'X';
-                            }
-                            else if (DistanceFromPlayer(x, y, player) < 2)
-                            {
-                                c = level.map[x, y].representation;
-                            }
-                            Image b = Image.FromFile("brick.jpg");
-                            Rectangle rect = new Rectangle(new Point(5 + step * x, 5 + step * y), new Size(width, height));
-                            g.DrawString(c.ToString(), font1, Brushes.Blue, rect);
-                            if (level.map[x,y].GetType() == typeof(WallTile)||
-                                level.map[x,y].GetType() == typeof(CornerTile))
-                                g.DrawImage(b, rect);
+                            c = level.map[x, y].representation;
                         }
+                        if (DistanceFromPlayer(x, y, player) == 0)
+                        {
+                            c = 'X';
+                        }
+                        else if (DistanceFromPlayer(x, y, player) < 2)
+                        {
+                            c = level.map[x, y].representation;
+                        }
+                        if (level.map[x, y].GetType() == typeof(KeyTile) && DistanceFromPlayer(x, y, player) == 0)
+                        {
+                            level.map[x, y] = new RoomTile();
+                        }
+                        g.DrawString(c.ToString(), font1, Brushes.Blue, rect);
                     }
-                    Font movesFont = new Font("Arial", 15, FontStyle.Bold, GraphicsUnit.Point);
-                    Rectangle moves = new Rectangle(new Point(tileSize * level.mapWidth, 10), new Size(80, 20));
-                    g.DrawString("Moves:", movesFont, Brushes.Black, moves);
-                    Rectangle movesCount = new Rectangle(new Point(tileSize * level.mapWidth, 30), new Size(80, 20));
-                    g.DrawString($"{player.Moves}", movesFont, Brushes.Black, movesCount);
                 }
+                Font movesFont = new Font("Arial", 15, FontStyle.Bold, GraphicsUnit.Point);
+                Rectangle moves = new Rectangle(new Point(tileSize * level.mapWidth, 10), new Size(80, 20));
+                Rectangle movesCount = new Rectangle(new Point(tileSize * level.mapWidth, 30), new Size(80, 20));
+                g.DrawString("Moves:", movesFont, Brushes.Black, moves); // "Moves:"
+                g.DrawString($"{player.Moves}", movesFont, Brushes.Black, movesCount); // Count the moves (numbers displayed)
             }
         }
 
         static int DistanceFromPlayer(int x, int y, Player player)
         {
-            return (int) Math.Sqrt(Math.Pow((player.PosX - x), 2) + Math.Pow((player.PosY - y), 2));
+            return (int)Math.Sqrt(Math.Pow((player.PosX - x), 2) + Math.Pow((player.PosY - y), 2));
         }
-
-        //static SolidBrush RandomBrush()
-        //{
-        //    SolidBrush[]
-        //    return new SolidBrush(Color.FromArgb(red, green, blue));
-        //}
 
         [STAThread]
         public void Start()
