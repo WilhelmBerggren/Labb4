@@ -1,13 +1,10 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace Labb4
+﻿namespace Labb4
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Game game = new Game();
+            ConsoleGame game = new ConsoleGame();
             game.Start();
         }
     }

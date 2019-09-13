@@ -1,11 +1,11 @@
 ﻿using System.Drawing;
+
 namespace Labb4
 {
     // class Tile contains representation (char) holds just one sign.
     // bool accessible to check if it's accessible to step on, meaning if you can go to its position
     public abstract class Tile
     {
-        public Image rep { get; set; }
         public char representation  { get; set; }
         public bool accessible { get; set; }
         public Brush color { get; set; }
@@ -81,8 +81,10 @@ namespace Labb4
 
     public class TrapTile : Tile
     {
+        public bool active;
         public TrapTile()
         {
+            this.active = true;
             this.representation = 'T';
             this.accessible = true;
         }

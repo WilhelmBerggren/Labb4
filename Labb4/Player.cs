@@ -15,22 +15,37 @@
 
         public int Moves { get => moves; set => moves = (moves > 0) ? value : moves; }
 
-        public void move(Tile t, int deltaX, int deltaY)
+        public void move(Tile currentTile, int deltaX, int deltaY)
         {
-            if (t == null)
+            if (currentTile == null)
                 return;
-            if (t.accessible)
+            if (currentTile.accessible)
             {
                 this.PosX += deltaX;
                 this.PosY += deltaY;
                 this.moves++;
 
-                if (t.GetType() == typeof(MonsterTile)) this.moves += 10;
-                else if (t.GetType() == typeof(TrapTile)) this.moves += 10;
-                else if (t.GetType() == typeof(KeyTile))
+                if (currentTile.GetType() == typeof(MonsterTile)) this.moves += 10;
+                else if (currentTile.GetType() == typeof(TrapTile))
                 {
-                    KeyTile kt = (KeyTile)t;
-                    kt.doorTile.accessible = true;
+                    TrapTile tt = (TrapTile)currentTile;
+                    if (tt.active)
+                        this.moves += 10;
+                }
+                else if (currentTile.GetType() == typeof(KeyTile))
+                {
+                    KeyTile keyTile = (KeyTile)currentTile;
+                    currentTile.representation = '.';
+                    keyTile.doorTile.accessible = true;
+                    keyTile.doorTile.representation = ' ';
+                }
+                else if (currentTile.GetType() == typeof(ButtonTile))
+                {
+                    ButtonTile trapTile = (ButtonTile)currentTile;
+                    currentTile.representation = '.';
+                    trapTile.trapTile.active = false;
+                    trapTile.trapTile.representation = '.';
+
                 }
             }
         }
