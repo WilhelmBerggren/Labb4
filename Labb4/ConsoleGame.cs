@@ -17,18 +17,19 @@ namespace Labb4
             Console.WriteLine("Press enter to start!");
             Console.ReadLine();
             this.consoleWidth = Console.WindowWidth / 2;
-            this.consoleHeight = Console.WindowHeight -2;
+            this.consoleHeight = Console.WindowHeight - 1;
             this.level = new Level(consoleWidth, consoleHeight);
             Loop();
         }
 
         private void Loop()
         {
+            Console.Clear();
+            Console.CursorVisible = false;
             while (player.Moves < 100)
             {
-                Console.Clear();
                 Draw();
-                switch (Console.ReadKey().Key)
+                switch (Console.ReadKey(true).Key)
                 {
                     case ConsoleKey.W:
                         MovePlayer(0, -1);
@@ -66,19 +67,25 @@ namespace Labb4
         {
             int mapWidth = level.map.GetLength(0);
             int mapHeight = level.map.GetLength(1);
+
             for (int y = 0; y < mapHeight; y++)
             {
                 for (int x = 0; x < mapWidth; x++)
                 {
                     char c = level.map[x, y].representation;
+                    if (DistanceFromPlayer(x, y) > 3)
+                        c = '.';
+                    if ((x == 0 || x == mapWidth - 1) ||
+                        (y == 0 || y == mapHeight - 1))
+                        c = level.map[x, y].representation;
                     if (player.PosX == x && player.PosY == y)
                         c = 'X';
-                    if (DistanceFromPlayer(x, y) > 3)
-                        c = ' ';
+
+                    Console.SetCursorPosition(x*2, y);
                     Console.Write(c + " ");
                 }
             }
-            Console.WriteLine($"Moves: {player.Moves}");
+            Console.Write($"Moves: {player.Moves}");
         }
     }
 }
