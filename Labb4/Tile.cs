@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using System;
 
 namespace Labb4
 {
@@ -6,29 +6,43 @@ namespace Labb4
     // bool accessible to check if it's accessible to step on, meaning if you can go to its position
     public abstract class Tile
     {
-        public char representation  { get; set; }
-        public bool accessible { get; set; }
-        public Brush color { get; set; }
+        public char Representation  { get; set; }
+        public bool IsAccessible { get; set; }
+        public ConsoleColor Color = ConsoleColor.White;
     }
 
-    public class DoorTile : Tile
+    public class DoorTile : Tile, ITileCollision
     {
-        public DoorTile()
+        public DoorTile(ConsoleColor color)
         {
-            this.representation = 'D';
-            this.accessible = false;
-            this.color = Brushes.Black;
+            this.Color = color;
+            this.Representation = 'D';
+            this.IsAccessible = false;
+        }
+
+        public void Collide(Player player)
+        {
+            player.level.EnterNewRoom();
         }
     }
 
-    public class ButtonTile : Tile
+    public class ButtonTile : Tile, ITileCollision
     {
         public TrapTile trapTile { get; set; }
         public ButtonTile(TrapTile trapTile)
         {
-            this.representation = 'B';
-            this.accessible = true;
+            this.Representation = 'B';
+            this.IsAccessible = true;
             this.trapTile = trapTile;
+            this.Color = ConsoleColor.Cyan;
+            this.trapTile.Color = this.Color;
+        }
+
+        public void Collide(Player player)
+        {
+            Representation = '.';
+            trapTile.active = false;
+            trapTile.Representation = '.';
         }
     }
 
@@ -36,8 +50,8 @@ namespace Labb4
     {
         public WallTile()
         {
-            this.representation = '#';
-            this.accessible = false;
+            this.Representation = '#';
+            this.IsAccessible = false;
         }
     }
 
@@ -45,48 +59,69 @@ namespace Labb4
     {
         public CornerTile()
         {
-            this.representation = 'O';
-            this.accessible = false;
+            this.Representation = '#';
         }
     }
 
     public class RoomTile : Tile
     {
-        public RoomTile()
+        public RoomTile(ConsoleColor color = ConsoleColor.White)
         {
-            this.representation = '.';
-            this.accessible = true;
+            this.Representation = '.';
+            this.IsAccessible = true;
+            this.Color = color;
         }
     }
 
-    public class MonsterTile : Tile
+    public class MonsterTile : Tile, ITileCollision
     {
         public MonsterTile()
         {
-            this.representation = 'M';
-            this.accessible = true;
+            this.Representation = 'M';
+            this.IsAccessible = true;
+            this.Color = ConsoleColor.Green;
+        }
+
+        public void Collide(Player player)
+        {
+            player.Moves += 10;
         }
     }
 
-    public class KeyTile : Tile
+    public class KeyTile : Tile, ITileCollision
     {
         public DoorTile doorTile { get; set; }
         public KeyTile(DoorTile doorTile)
         {
             this.doorTile = doorTile;
-            this.representation = 'K';
-            this.accessible = true;
+            this.Representation = 'K';
+            this.IsAccessible = true;
+            this.Color = this.doorTile.Color;
+        }
+
+        public void Collide(Player player)
+        {
+            Representation = new RoomTile().Representation;
+            Color = new RoomTile().Color;
+            doorTile.IsAccessible = true;
+            doorTile.Representation = ' ';
         }
     }
 
-    public class TrapTile : Tile
+    public class TrapTile : Tile, ITileCollision
     {
         public bool active;
         public TrapTile()
         {
             this.active = true;
-            this.representation = 'T';
-            this.accessible = true;
+            this.Representation = 'T';
+            this.IsAccessible = true;
+        }
+
+        public void Collide(Player player)
+        {
+            if(active)
+                player.Moves += 10;
         }
     }
 }

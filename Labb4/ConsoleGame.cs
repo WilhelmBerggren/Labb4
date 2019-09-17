@@ -10,7 +10,7 @@ namespace Labb4
         int consoleHeight;
         public ConsoleGame()
         {
-            this.player = new Player(2, 2, 0);
+            this.player = new Player(level, 2, 2, 0);
         }
         public void Start()
         {
@@ -19,44 +19,38 @@ namespace Labb4
             this.consoleWidth = Console.WindowWidth / 2;
             this.consoleHeight = Console.WindowHeight - 1;
             this.level = new Level(consoleWidth, consoleHeight);
-            Loop();
+            GameLoop();
         }
 
-        private void Loop()
+        private void GameLoop()
         {
             Console.Clear();
             Console.CursorVisible = false;
             while (player.Moves < 100)
             {
                 Draw();
-                switch (Console.ReadKey(true).Key)
-                {
-                    case ConsoleKey.W:
-                        MovePlayer(0, -1);
-                        break;
-                    case ConsoleKey.A:
-                        MovePlayer(-1, 0);
-                        break;
-                    case ConsoleKey.S:
-                        MovePlayer(0, +1);
-                        break;
-                    case ConsoleKey.D:
-                        MovePlayer(+1, 0);
-                        break;
-                }
+                WaitForInput();
             }
+            Console.Clear();
             Console.Write("You lose!");
             Console.ReadKey();
         }
-        private void MovePlayer(int deltaX, int deltaY)
+        private void WaitForInput()
         {
-            int targetX = player.PosX + deltaX;
-            int targetY = player.PosY + deltaY;
-
-            if (targetX >= 0 && targetX < level.map.GetLength(0) &&
-                targetY >= 0 && targetY < level.map.GetLength(1))
+            switch (Console.ReadKey(true).Key)
             {
-                player.move(level.map[targetX, targetY], deltaX, deltaY);
+                case ConsoleKey.W:
+                    player.Move(level, 0, -1);
+                    break;
+                case ConsoleKey.A:
+                    player.Move(level, -1, 0);
+                    break;
+                case ConsoleKey.S:
+                    player.Move(level, 0, +1);
+                    break;
+                case ConsoleKey.D:
+                    player.Move(level, +1, 0);
+                    break;
             }
         }
         private int DistanceFromPlayer(int x, int y)
@@ -72,16 +66,18 @@ namespace Labb4
             {
                 for (int x = 0; x < mapWidth; x++)
                 {
-                    char c = level.map[x, y].representation;
+                    Tile currentTile = level.map[x, y];
+                    char c = currentTile.Representation;
                     if (DistanceFromPlayer(x, y) > 3)
-                        c = '.';
-                    if ((x == 0 || x == mapWidth - 1) ||
-                        (y == 0 || y == mapHeight - 1))
-                        c = level.map[x, y].representation;
+                        c = ' ';
+                    if (x == 0 || x == mapWidth - 1 ||
+                        y == 0 || y == mapHeight - 1)
+                        c = level.map[x, y].Representation;
                     if (player.PosX == x && player.PosY == y)
                         c = 'X';
 
                     Console.SetCursorPosition(x*2, y);
+                    Console.ForegroundColor = currentTile.Color;
                     Console.Write(c + " ");
                 }
             }
