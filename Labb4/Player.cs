@@ -2,14 +2,14 @@
 {
     public class Player
     {
-        public Level level;
         public int PosX;
         public int PosY;
         private int moves;
+        private Game game;
 
-        public Player(Level level, int posX, int posY, int moves)
+        public Player(Game game, int posX, int posY, int moves)
         {
-            this.level = level;
+            this.game = game;
             this.PosX = posX;
             this.PosY = posY;
             this.moves = moves;
@@ -17,16 +17,15 @@
 
         public int Moves { get => moves; set => moves = (moves > 0) ? value : moves; }
 
-        public void Move(Level level, int deltaX, int deltaY)
+        public void Move(int deltaX, int deltaY)
         {
-            this.level = level;
             int targetX = PosX + deltaX;
             int targetY = PosY + deltaY;
 
-            if (targetX >= 0 && targetX < level.map.GetLength(0) &&
-                targetY >= 0 && targetY < level.map.GetLength(1))
+            if (targetX >= 0 && targetX < game.MapWidth &&
+                targetY >= 0 && targetY < game.MapHeight)
             {
-                Tile currentTile = level.map[targetX, targetY];
+                Tile currentTile = game.Level.currentRoom.Map[targetX, targetY];
                 if (currentTile == null || !currentTile.IsAccessible)
                     return;
 
@@ -44,7 +43,7 @@
             if (collidingTile is ITileCollision)
             {
                 var tile = (ITileCollision)collidingTile;
-                tile.Collide(this);
+                tile.Collide(game);
             }
         }
     }

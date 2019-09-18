@@ -5,22 +5,26 @@ namespace Labb4
 {
     public class Level
     {
+        public Game game;
         public List<Room> rooms;
-        public Tile[,] map;
-        public int mapHeight;
-        public int mapWidth;
-        public Level(int mapWidth, int mapHeight)
+        public Room currentRoom;
+
+        public Level(Game game)
         {
+            this.game = game;
             rooms = new List<Room>();
-            this.mapWidth = mapWidth;
-            this.mapHeight = mapHeight;
-            EnterNewRoom();
+            EnterRoom(null, new Room(game, currentRoom));
         }
-        public void EnterNewRoom()
+
+        internal void EnterRoom(DoorTile door, Room room)
         {
-            Room room = new Room(mapWidth, mapHeight);
-            this.rooms.Add(room);
-            this.map = room.map;
+            if (room == null)
+                room = new Room(game, currentRoom);
+
+            if (!rooms.Contains(room))
+                this.rooms.Add(room);
+
+            this.currentRoom = room;
         }
     }
 }

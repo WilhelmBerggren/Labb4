@@ -13,6 +13,7 @@ namespace Labb4
 
     public class DoorTile : Tile, ITileCollision
     {
+        public Room previousRoom;
         public DoorTile(ConsoleColor color)
         {
             this.Color = color;
@@ -20,9 +21,26 @@ namespace Labb4
             this.IsAccessible = false;
         }
 
-        public void Collide(Player player)
+        public void Collide(Game game)
         {
-            player.level.EnterNewRoom();
+            game.Level.EnterRoom(this, previousRoom);
+        }
+    }
+
+    public class ReturnDoorTile : Tile, ITileCollision
+    {
+        public Room previousRoom;
+        public ReturnDoorTile(Room room)
+        {
+            this.previousRoom = room;
+            this.Color = ConsoleColor.White;
+            this.Representation = 'D';
+            this.IsAccessible = true;
+        }
+
+        public void Collide(Game game)
+        {
+            game.Level.EnterRoom(null, previousRoom);
         }
     }
 
@@ -38,7 +56,7 @@ namespace Labb4
             this.trapTile.Color = this.Color;
         }
 
-        public void Collide(Player player)
+        public void Collide(Game game)
         {
             Representation = '.';
             trapTile.active = false;
@@ -82,9 +100,9 @@ namespace Labb4
             this.Color = ConsoleColor.Green;
         }
 
-        public void Collide(Player player)
+        public void Collide(Game game)
         {
-            player.Moves += 10;
+            game.Player.Moves += 10;
         }
     }
 
@@ -99,7 +117,7 @@ namespace Labb4
             this.Color = this.doorTile.Color;
         }
 
-        public void Collide(Player player)
+        public void Collide(Game game)
         {
             Representation = new RoomTile().Representation;
             Color = new RoomTile().Color;
@@ -118,10 +136,10 @@ namespace Labb4
             this.IsAccessible = true;
         }
 
-        public void Collide(Player player)
+        public void Collide(Game game)
         {
             if(active)
-                player.Moves += 10;
+                game.Player.Moves += 10;
         }
     }
 }

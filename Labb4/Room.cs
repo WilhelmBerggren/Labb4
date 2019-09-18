@@ -4,23 +4,38 @@ namespace Labb4
 {
     public class Room
     {
-        public Tile[,] map;
-        public int mapHeight;
-        public int mapWidth;
-        public Room(int mapWidth, int mapHeight)
+        private Tile[,] map;
+        private int mapHeight;
+        private int mapWidth;
+
+        public Tile[,] Map { get => map; }
+
+        private Game game;
+        public Room(Game game, Room previousRoom)
         {
-            this.mapWidth = mapWidth;
-            this.mapHeight = mapHeight;
+            this.game = game;
+            this.mapWidth = game.MapWidth;
+            this.mapHeight = game.MapHeight;
             this.map = new Tile[mapWidth, mapHeight];
-            Generate();
+            Generate(previousRoom);
         }
-        public void Generate()
+        public void Generate(Room previousRoom)
         {
+            int playerX = game.Player.PosX;
+            int playerY = game.Player.PosY;
+
             for (int row = 0; row < this.mapWidth; row++)
             {
                 for (int column = 0; column < mapHeight; column++)
                 {
-                    if (row == 0 || column == 0 || row == mapWidth - 1 || column == mapHeight - 1)
+                    if (row == playerX && column == playerY && previousRoom != null)
+                    {
+                        //map[row, column] = new RoomTile(); //game.Level.currentRoom);
+                        
+                        map[row, column] = new ReturnDoorTile(previousRoom);
+                    }
+                    else if (row == 0 || column == 0 || row == mapWidth - 1 || column == mapHeight - 1)
+                    {
                         if ((row == 0 && column == 0) ||
                             (row == 0 && column == mapHeight - 1) ||
                             (row == mapWidth - 1 && column == 0) ||
@@ -30,6 +45,7 @@ namespace Labb4
                         }
                         else
                             map[row, column] = new WallTile();
+                    }
                     else
                         map[row, column] = new RoomTile();
                 }
@@ -37,7 +53,8 @@ namespace Labb4
             PlaceKeyDoorPair(new DoorTile(ConsoleColor.Red));
             PlaceKeyDoorPair(new DoorTile(ConsoleColor.Blue));
             PlaceButtonTrapPairs(1);
-            PlaceMonsters(1);
+            int monsterCount = new Random().Next(3, game.MapWidth);
+            PlaceMonsters(monsterCount);
         }
         public void PlaceMonsters(int monsters)
         {
@@ -74,7 +91,9 @@ namespace Labb4
 
                 if (visited[posX, posY] != true)
                 {
-                    if (map[posX, posY].GetType() == oldTile)
+                    if (map[posX, posY].GetType() == oldTile &&
+                        posX != game.Player.PosX &&
+                        posY != game.Player.PosY)
                     {
                         map[posX, posY] = newTile;
                         return true;

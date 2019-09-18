@@ -1,10 +1,13 @@
-﻿namespace Labb4
+﻿using System;
+
+namespace Labb4
 {
     class Program
     {
         static void Main(string[] args)
         {
-            ConsoleGame game = new ConsoleGame();
+            //Console.WriteLine("Adjust window to change map size and press any key to start!");
+            Game game = new Game();
             game.Start();
         }
     }
