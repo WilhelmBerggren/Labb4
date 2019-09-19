@@ -6,7 +6,8 @@ namespace Labb4
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine("Adjust window to change map size and press any key to start!");
+            Console.WriteLine("Adjust window to change map size and press any key to start!");
+            Console.ReadKey();
             Game game = new Game();
             game.Start();
         }
