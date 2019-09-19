@@ -13,13 +13,14 @@ namespace Labb4
         {
             this.game = game;
             rooms = new List<Room>();
-            EnterRoom(null, new Room(game, currentRoom));
+            Room room = new Room(game, currentRoom);
+            EnterRoom(room);
         }
 
-        internal void EnterRoom(DoorTile door, Room room)
+        internal void EnterRoom(Room room)
         {
-            if (room == null)
-                room = new Room(game, currentRoom);
+            if (room.Map == null)
+                room.Generate(this.currentRoom);
 
             if (!rooms.Contains(room))
                 this.rooms.Add(room);
