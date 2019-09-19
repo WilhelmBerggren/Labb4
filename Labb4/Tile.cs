@@ -8,6 +8,7 @@ namespace Labb4
     {
         public char Representation  { get; set; }
         public bool IsAccessible { get; set; }
+        public bool Visible { get; set; }
         public ConsoleColor Color = ConsoleColor.White;
     }
 
@@ -47,21 +48,21 @@ namespace Labb4
 
     public class ButtonTile : Tile, ITileCollision
     {
-        public TrapTile trapTile { get; set; }
+        public TrapTile TrapTile { get; set; }
         public ButtonTile(TrapTile trapTile)
         {
             this.Representation = 'B';
             this.IsAccessible = true;
-            this.trapTile = trapTile;
+            this.TrapTile = trapTile;
             this.Color = ConsoleColor.Cyan;
-            this.trapTile.Color = this.Color;
+            this.TrapTile.Color = this.Color;
         }
 
         public void Collide(Game game)
         {
             Representation = '.';
-            trapTile.active = false;
-            trapTile.Representation = '.';
+            TrapTile.active = false;
+            TrapTile.Representation = '.';
         }
     }
 
@@ -71,6 +72,7 @@ namespace Labb4
         {
             this.Representation = '#';
             this.IsAccessible = false;
+            this.Visible = true;
         }
     }
 
@@ -79,6 +81,7 @@ namespace Labb4
         public CornerTile()
         {
             this.Representation = '#';
+            this.Visible = true;
         }
     }
 

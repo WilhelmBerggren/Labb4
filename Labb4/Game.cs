@@ -56,7 +56,7 @@ namespace Labb4
                 name = "anonymous";
             scores.Add(new KeyValuePair<string, int>(name, level.rooms.Count));
 
-            foreach(var i in scores.OrderByDescending(score => score.Value))
+            foreach (var i in scores.OrderByDescending(score => score.Value))
             {
                 Console.WriteLine($"{i.Key}: {i.Value}");
             }
@@ -84,9 +84,9 @@ namespace Labb4
                     break;
             }
         }
-        private int DistanceFromPlayer(int x, int y)
+        private double DistanceFromPlayer(int x, int y)
         {
-            return (int)Math.Sqrt(Math.Pow((player.PosX - x), 2) + Math.Pow((player.PosY - y), 2));
+            return Math.Sqrt(Math.Pow((player.PosX - x), 2) + Math.Pow((player.PosY - y), 2));
         }
         private void Draw()
         {
@@ -96,20 +96,30 @@ namespace Labb4
                 {
                     Tile currentTile = level.currentRoom.Map[row, column];
                     char c = currentTile.Representation;
-                    if (DistanceFromPlayer(row, column) > 3)
+
+                    if (DistanceFromPlayer(row, column) < 2.5)
+                    {
+                        currentTile.Visible = true;
+                    }
+
+                    if(!currentTile.Visible)
+                    {
                         c = ' ';
-                    if (row == 0 || row == mapWidth - 1 ||
-                        column == 0 || column == mapHeight - 1)
-                        c = level.currentRoom.Map[row, column].Representation;
+                    }
+
                     if (player.PosX == row && player.PosY == column)
                         c = 'X';
 
-                    Console.SetCursorPosition(row*2, column);
-                    Console.ForegroundColor = currentTile.Color;
-                    Console.Write(c + " ");
+                    PrintChar(c, currentTile.Color, row, column);
                 }
             }
             Console.Write($"Moves: {player.Moves}, rooms: {level.rooms.Count}");
+        }
+        private void PrintChar(char c, ConsoleColor consoleColor, int x, int y)
+        {
+            Console.SetCursorPosition(x * 2, y);
+            Console.ForegroundColor = consoleColor;
+            Console.Write(c + " ");
         }
     }
 }
