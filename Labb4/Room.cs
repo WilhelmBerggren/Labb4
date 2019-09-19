@@ -41,10 +41,14 @@ namespace Labb4
                             map[row, column] = new CornerTile();
                         }
                         else
+                        {
                             map[row, column] = new WallTile();
+                        }
                     }
                     else
+                    {
                         map[row, column] = new RoomTile();
+                    }
                 }
             }
             PlaceKeyDoorPair(new DoorTile(game, ConsoleColor.Red, this));

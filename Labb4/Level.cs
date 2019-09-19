@@ -20,10 +20,13 @@ namespace Labb4
         internal void EnterRoom(Room room)
         {
             if (room.Map == null)
+            {
                 room.Generate(this.currentRoom);
-
+            }
             if (!rooms.Contains(room))
+            {
                 this.rooms.Add(room);
+            }
 
             this.currentRoom = room;
         }

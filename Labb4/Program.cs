@@ -2,9 +2,9 @@
 
 namespace Labb4
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Console.WriteLine("Adjust window to change map size and press any key to start!");
             Console.ReadKey();
@@ -14,28 +14,33 @@ namespace Labb4
     }
 }
 /*
- * You start in a room and have to collect a key while avoiding monsters and go onto a door-tile.
- * Upon stepping on the door-tile, you end up in a smaller, rectangular room with a treasure chest.
- * If key is collected, enter the room. If key is NOT collected, display message.
+ * Probably missed some coding conventions.
+ * Code can still be refreshed by removing duplicate code, alternatively refactor to reduce code overall.
+ * Maybe add a random starting place for the player?
+ * Finally, before handing this in, we have to recheck the project to see if we can rewrite some things.
  * 
- * WIN-Condition: Open the chest to win.
- * LOSE-Condition: Lose upon reaching 100 steps.
+ * Står i bedömningskriterierna för G att det ska gå att klara spelet och se sin poäng.
+ * Om vi inte behöver uppfylla alla G-kriterier så kan vi bortse ifrån denna. Då blir det bara som ett race helt enkelt, där man ser vem som kan komma längst.
+ * Fråga Pontus om detta är OK?
+ * 
+ * Lacks a WIN-condition (see above)
+ * LOSE-condition: GAME OVER occurs when the amount of player steps equals the max allowed steps.
  * 
  * TODO: 
- * Fix bug:
- * When launching the game at a size larger than the CheckConsoleWindowSize methods if-parameters(game class)
- * the game crashes when attempting to redraw it after reducing the size below the if-parameters.
- * If launching the game below the if-parameters range, checking it before redrawing increases the size to the if-parameters
+ * Fix bugs:
+ * In the starting room, there are no tiles whatsoever on the row or column where the player starts.
+ * Ex. player(2, 2, 0) = third row, third column (counting walls, arrays are 0-based). Nothing appears on either lines.
+ * Two bugs listed in the Game-Class (just above the Start() method), deals with resizing and printing the map and errors/crashes.
  *
  * 
  */
 
 
-    /*
-       interface, implements all chests.
-       What the chests drop and all, is done with the interface
+/*
+   interface, implements all chests.
+   What the chests drop and all, is done with the interface
 
-       Interface = treasurechest
-       firechest = fire items
-       ice chest, ice items.
-    */
+   Interface = treasurechest
+   firechest = fire items
+   ice chest, ice items.
+*/

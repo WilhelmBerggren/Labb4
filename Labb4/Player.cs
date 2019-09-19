@@ -26,8 +26,10 @@
                 targetY >= 0 && targetY < game.MapHeight)
             {
                 Tile currentTile = game.Level.currentRoom.Map[targetX, targetY];
-                if (currentTile == null || !currentTile.IsAccessible)
+                if (currentTile == null || !currentTile.isAccessible)
+                {
                     return;
+                }
 
                 this.PosX += deltaX;
                 this.PosY += deltaY;
