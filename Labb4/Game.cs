@@ -10,11 +10,19 @@ namespace Labb4
         private Level level;
         private int mapWidth;
         private int mapHeight;
+        private static int maxMovesAllowed = 500;
+        private const int monsterMovesPenalty = 10;
+        private const int trapMovesPenalty = 50;
+        private const int buttonMovesBoost = 50;
 
         public int MapWidth { get => mapWidth; }
         public int MapHeight { get => mapHeight; }
         public Player Player { get => player; }
         public Level Level { get => level; }
+        public static int MaxMovesAllowed { get => maxMovesAllowed; set => maxMovesAllowed = value; }
+        public static int MonsterMovesPenalty { get => monsterMovesPenalty; }
+        public static int TrapMovesPenalty { get => trapMovesPenalty; }
+        public static int ButtonMovesBoost { get => buttonMovesBoost; }
 
         private List<KeyValuePair<string, int>> scores;
 
@@ -25,18 +33,26 @@ namespace Labb4
 
         public void Start()
         {
+            CheckConsoleWindowSize();
+
             this.player = new Player(this, 2, 2, 0);
             this.mapWidth = Console.WindowWidth / 2;
-            this.mapHeight = Console.WindowHeight - 1;
+            this.mapHeight = Console.WindowHeight - 2;
             this.level = new Level(this);
             GameLoop();
+        }
+       
+        private void CheckConsoleWindowSize()
+        {
+            if (Console.WindowWidth < 88 || Console.WindowHeight < 10)
+                Console.SetWindowSize(88, 10);
         }
 
         private void GameLoop()
         {
             Console.Clear();
             Console.CursorVisible = false;
-            while (player.Moves < 100)
+            while (player.Moves < maxMovesAllowed)
             {
                 Draw();
                 WaitForInput();
@@ -55,7 +71,7 @@ namespace Labb4
             Console.Clear();
             Console.WriteLine(
                 "====================================\n" +
-                "             SCORELIST               " +
+                "             SCORE LIST               " +
                 "\n===================================="
                 );
 
@@ -100,7 +116,30 @@ namespace Labb4
                 case ConsoleKey.D:
                     player.Move(+1, 0);
                     break;
+                case ConsoleKey.L:
+                    DisplayLegend();
+                    break;
+                case ConsoleKey.Escape:
+                    Environment.Exit(0);
+                    break;
             }
+        }
+        private void DisplayLegend()
+        {
+            Console.Clear();
+            Console.WriteLine(
+                "#: Wall Tiles. These are inaccessible and limits you to the game area\n\n" +
+                $"M: Monster Tiles. Stepping on these will incur a penalty, increase your steps by {MonsterMovesPenalty}\n\n" +
+                $"T: Trap Tile. Stepping on these will incur a penalty, increase your steps by {trapMovesPenalty}\n\n" +
+                $"B: Button Tile. Stepping on these will increase the max allowed steps by {buttonMovesBoost}\n\n" +
+                $"K: Key Tile. Stepping on these will unlock a door of the corresponding colour\n\n" +
+                $"D: Door Tile. Will unlock and disappear once you pick up a key of the corresponding colour and\n" +
+                $"leaving behind an empty space, allowing you to step into a new room\n\n" +
+                $"D (White): Returns you to a previous room" +
+                $"\n\n\nPress any key to return to the game.");
+            Console.ReadKey();
+            Console.Clear();
+            Draw();
         }
         private int DistanceFromPlayer(int x, int y)
         {
@@ -122,12 +161,13 @@ namespace Labb4
                     if (player.PosX == row && player.PosY == column)
                         c = 'X';
 
+                    CheckConsoleWindowSize();
                     Console.SetCursorPosition(row*2, column);
                     Console.ForegroundColor = currentTile.Color;
                     Console.Write(c + " ");
                 }
             }
-            Console.Write($"Moves: {player.Moves}, rooms: {level.rooms.Count}");
+            Console.Write($"Moves: {player.Moves}, rooms: {level.rooms.Count}\t Press 'L' for legend at any time.\t Press 'ESC' to quit.");
         }
     }
 }

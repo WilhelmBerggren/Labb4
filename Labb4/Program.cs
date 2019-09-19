@@ -22,14 +22,11 @@ namespace Labb4
  * LOSE-Condition: Lose upon reaching 100 steps.
  * 
  * TODO: 
- * Same color for key and door.
- * 
- * Implement an array to store maps (max 3 maps)
- * Start at index 0 (first map), when you enter the door in map 1, you go to map 2. Chest at last map.
- * 
- * Implement feature to keep drawing tiles the player has already walked on.
- * Implement feature to display highscore of number of moves when finishing game.
- *      When finishing the game, display popup to grats user and restart. Save highscore.
+ * Fix bug:
+ * When launching the game at a size larger than the CheckConsoleWindowSize methods if-parameters(game class)
+ * the game crashes when attempting to redraw it after reducing the size below the if-parameters.
+ * If launching the game below the if-parameters range, checking it before redrawing increases the size to the if-parameters
+ *
  * 
  */
 

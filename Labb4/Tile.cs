@@ -59,6 +59,7 @@ namespace Labb4
 
         public void Collide(Game game)
         {
+            Game.MaxMovesAllowed += Game.ButtonMovesBoost;
             Representation = '.';
             trapTile.active = false;
             trapTile.Representation = '.';
@@ -103,7 +104,7 @@ namespace Labb4
 
         public void Collide(Game game)
         {
-            game.Player.Moves += 10;
+            game.Player.Moves += Game.MonsterMovesPenalty;
         }
     }
 
@@ -140,7 +141,7 @@ namespace Labb4
         public void Collide(Game game)
         {
             if(active)
-                game.Player.Moves += 10;
+                game.Player.Moves += Game.TrapMovesPenalty;
         }
     }
 }
