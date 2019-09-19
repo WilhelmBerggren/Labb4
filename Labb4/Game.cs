@@ -20,14 +20,12 @@ namespace Labb4
 
         public Game()
         {
-            this.player = new Player(this, 2, 2, 0);
             this.scores = new List<KeyValuePair<string, int>>();
         }
 
         public void Start()
         {
-            Console.WriteLine("Press enter to start!");
-            Console.ReadLine();
+            this.player = new Player(this, 2, 2, 0);
             this.mapWidth = Console.WindowWidth / 2;
             this.mapHeight = Console.WindowHeight - 1;
             this.level = new Level(this);
@@ -50,20 +48,40 @@ namespace Labb4
 
         private void GameOver()
         {
-            Console.WriteLine("insert name:");
-            string name = Console.ReadLine();
-            if (name == null)
-                name = "anonymous";
-            scores.Add(new KeyValuePair<string, int>(name, level.rooms.Count));
+            Console.WriteLine("Insert name:");
+            string userInput = Console.ReadLine();
+            string name = ScoreNameCriterias(userInput, out name);
 
+            Console.Clear();
+            Console.WriteLine(
+                "====================================\n" +
+                "             SCORELIST               " +
+                "\n===================================="
+                );
+
+            scores.Add(new KeyValuePair<string, int>(name, level.rooms.Count));
+            Console.WriteLine($"Name:\t\t\tFinal floor:");
             foreach (var i in scores.OrderByDescending(score => score.Value))
             {
-                Console.WriteLine($"{i.Key}: {i.Value}");
+                Console.WriteLine($"{i.Key}\t\t\t{i.Value}");
             }
-            Console.WriteLine("Press enter to restart");
+            Console.WriteLine("\n\nPress any key to restart...");
             Console.ReadKey(true);
             Console.Clear();
             Start();
+        }
+
+        private string ScoreNameCriterias(string userInput, out string name)
+        {
+            if (string.IsNullOrEmpty(userInput) || string.IsNullOrWhiteSpace(userInput))
+                name = "Anonymous";
+
+            else if (userInput.Length > 15)
+                name = userInput.Remove(14);
+
+            else
+                name = userInput;
+            return name;
         }
 
         private void WaitForInput()
