@@ -16,11 +16,10 @@ namespace Labb4
             this.game = game;
             this.mapWidth = game.MapWidth;
             this.mapHeight = game.MapHeight;
-            this.map = new Tile[mapWidth, mapHeight];
-            Generate(previousRoom);
         }
         public void Generate(Room previousRoom)
         {
+            this.map = new Tile[mapWidth, mapHeight];
             int playerX = game.Player.PosX;
             int playerY = game.Player.PosY;
 
@@ -30,8 +29,6 @@ namespace Labb4
                 {
                     if (row == playerX && column == playerY && previousRoom != null)
                     {
-                        //map[row, column] = new RoomTile(); //game.Level.currentRoom);
-                        
                         map[row, column] = new ReturnDoorTile(previousRoom);
                     }
                     else if (row == 0 || column == 0 || row == mapWidth - 1 || column == mapHeight - 1)
@@ -50,8 +47,8 @@ namespace Labb4
                         map[row, column] = new RoomTile();
                 }
             }
-            PlaceKeyDoorPair(new DoorTile(ConsoleColor.Red));
-            PlaceKeyDoorPair(new DoorTile(ConsoleColor.Blue));
+            PlaceKeyDoorPair(new DoorTile(game, ConsoleColor.Red, this));
+            PlaceKeyDoorPair(new DoorTile(game, ConsoleColor.Blue, this));
             PlaceButtonTrapPairs(1);
             int monsterCount = new Random().Next(3, game.MapWidth);
             PlaceMonsters(monsterCount);

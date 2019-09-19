@@ -13,26 +13,27 @@ namespace Labb4
 
     public class DoorTile : Tile, ITileCollision
     {
-        public Room previousRoom;
-        public DoorTile(ConsoleColor color)
+        public Room leadsTo;
+        public DoorTile(Game game, ConsoleColor color, Room currentRoom)
         {
             this.Color = color;
             this.Representation = 'D';
             this.IsAccessible = false;
+            this.leadsTo = new Room(game, currentRoom);
         }
 
         public void Collide(Game game)
         {
-            game.Level.EnterRoom(this, previousRoom);
+            game.Level.EnterRoom(leadsTo);
         }
     }
 
     public class ReturnDoorTile : Tile, ITileCollision
     {
-        public Room previousRoom;
-        public ReturnDoorTile(Room room)
+        public Room leadsTo;
+        public ReturnDoorTile(Room previousRoom)
         {
-            this.previousRoom = room;
+            this.leadsTo = previousRoom;
             this.Color = ConsoleColor.White;
             this.Representation = 'D';
             this.IsAccessible = true;
@@ -40,7 +41,7 @@ namespace Labb4
 
         public void Collide(Game game)
         {
-            game.Level.EnterRoom(null, previousRoom);
+            game.Level.EnterRoom(leadsTo);
         }
     }
 
