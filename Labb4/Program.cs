@@ -4,7 +4,7 @@ namespace Labb4
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             Console.WriteLine("Adjust window to change map size and press any key to start!");
             Console.ReadKey();

@@ -5,7 +5,7 @@
         public int PosX;
         public int PosY;
         private int moves;
-        private Game game;
+        private readonly Game game;
 
         public Player(Game game, int posX, int posY, int moves)
         {
@@ -26,7 +26,7 @@
                 targetY >= 0 && targetY < game.MapHeight)
             {
                 Tile currentTile = game.Level.currentRoom.Map[targetX, targetY];
-                if (currentTile == null || !currentTile.isAccessible)
+                if (currentTile == null || !currentTile.IsAccessible)
                 {
                     return;
                 }
@@ -42,9 +42,8 @@
 
         public void HandleCollision(Tile collidingTile)
         {
-            if (collidingTile is ITileCollision)
+            if (collidingTile is ITileCollision tile)
             {
-                var tile = (ITileCollision)collidingTile;
                 tile.Collide(game);
             }
         }

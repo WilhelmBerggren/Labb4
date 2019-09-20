@@ -13,7 +13,7 @@ namespace Labb4
         {
             this.game = game;
             rooms = new List<Room>();
-            Room room = new Room(game, currentRoom);
+            Room room = new Room(game);
             EnterRoom(room);
         }
 

@@ -5,13 +5,13 @@ namespace Labb4
     public class Room
     {
         private Tile[,] map;
-        private int mapHeight;
-        private int mapWidth;
+        private readonly int mapHeight;
+        private readonly int mapWidth;
 
         public Tile[,] Map { get => map; }
 
-        private Game game;
-        public Room(Game game, Room previousRoom)
+        private readonly Game game;
+        public Room(Game game)
         {
             this.game = game;
             this.mapWidth = game.MapWidth;
@@ -27,6 +27,7 @@ namespace Labb4
             {
                 for (int column = 0; column < mapHeight; column++)
                 {
+                    // When player enters new room, add a ReturnDoorTile at their position
                     if (row == playerX && column == playerY && previousRoom != null)
                     {
                         map[row, column] = new ReturnDoorTile(previousRoom);
@@ -51,9 +52,10 @@ namespace Labb4
                     }
                 }
             }
-            PlaceKeyDoorPair(new DoorTile(game, ConsoleColor.Red, this));
-            PlaceKeyDoorPair(new DoorTile(game, ConsoleColor.Blue, this));
-            PlaceButtonTrapPairs(1);
+            PlaceKeyDoorPair(new DoorTile(game, ConsoleColor.Red));
+            PlaceKeyDoorPair(new DoorTile(game, ConsoleColor.Blue));
+            int trapCount= new Random().Next(3, game.MapHeight);
+            PlaceButtonTrapPairs(trapCount);
             int monsterCount = new Random().Next(3, game.MapWidth);
             PlaceMonsters(monsterCount);
         }
@@ -93,8 +95,8 @@ namespace Labb4
                 if (visited[posX, posY] != true)
                 {
                     if (map[posX, posY].GetType() == oldTile &&
-                        posX != game.Player.PosX &&
-                        posY != game.Player.PosY)
+                        (posX != game.Player.PosX ||
+                        posY != game.Player.PosY))
                     {
                         map[posX, posY] = newTile;
                         return true;

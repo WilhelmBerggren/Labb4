@@ -6,22 +6,22 @@ namespace Labb4
     // bool accessible to check if it's accessible to step on, meaning if you can go to its position
     public abstract class Tile
     {
-        public char representation  { get; set; }
-        public bool isAccessible { get; set; }
-        public bool isVisible { get; set; }
+        public char Representation  { get; set; }
+        public bool IsAccessible { get; set; }
+        public bool IsVisible { get; set; }
         public ConsoleColor color = ConsoleColor.White;
     }
 
     public class DoorTile : Tile, ITileCollision
     {
         public Room leadsTo;
-        public DoorTile(Game game, ConsoleColor color, Room currentRoom)
+        public DoorTile(Game game, ConsoleColor color)
         {
             this.color = color;
-            this.representation = 'D';
-            this.isAccessible = false;
-            this.leadsTo = new Room(game, currentRoom);
-            this.isVisible = true;
+            this.Representation = 'D';
+            this.IsAccessible = false;
+            this.leadsTo = new Room(game);
+            this.IsVisible = true;
         }
 
         public void Collide(Game game)
@@ -37,9 +37,9 @@ namespace Labb4
         {
             this.leadsTo = previousRoom;
             this.color = ConsoleColor.White;
-            this.representation = 'D';
-            this.isAccessible = true;
-            this.isVisible = true;
+            this.Representation = 'D';
+            this.IsAccessible = true;
+            this.IsVisible = true;
         }
 
         public void Collide(Game game)
@@ -54,8 +54,8 @@ namespace Labb4
         public TrapTile TrapTile { get; set; }
         public ButtonTile(TrapTile trapTile)
         {
-            this.representation = 'B';
-            this.isAccessible = true;
+            this.Representation = 'B';
+            this.IsAccessible = true;
             this.TrapTile = trapTile;
             this.color = ConsoleColor.Cyan;
             this.TrapTile.color = this.color;
@@ -65,9 +65,9 @@ namespace Labb4
         {
             this.color = ConsoleColor.White; //this.color = ButtonTile's color
             TrapTile.color = ConsoleColor.White;
-            representation = '.';
+            Representation = '.';
             TrapTile.trapIsActive = false;
-            TrapTile.representation = '.';
+            TrapTile.Representation = '.';
             if (buttonIsActive)
             {
                 Game.MaxMovesAllowed += Game.ButtonMovesBoost;
@@ -80,9 +80,9 @@ namespace Labb4
     {
         public WallTile()
         {
-            this.representation = '#';
-            this.isAccessible = false;
-            this.isVisible = true;
+            this.Representation = '#';
+            this.IsAccessible = false;
+            this.IsVisible = true;
         }
     }
 
@@ -90,8 +90,8 @@ namespace Labb4
     {
         public CornerTile()
         {
-            this.representation = '#';
-            this.isVisible = true;
+            this.Representation = '#';
+            this.IsVisible = true;
         }
     }
 
@@ -99,8 +99,8 @@ namespace Labb4
     {
         public RoomTile(ConsoleColor color = ConsoleColor.White)
         {
-            this.representation = '.';
-            this.isAccessible = true;
+            this.Representation = '.';
+            this.IsAccessible = true;
             this.color = color;
         }
     }
@@ -109,8 +109,8 @@ namespace Labb4
     {
         public MonsterTile()
         {
-            this.representation = 'M';
-            this.isAccessible = true;
+            this.Representation = 'M';
+            this.IsAccessible = true;
             this.color = ConsoleColor.Green;
         }
 
@@ -122,21 +122,21 @@ namespace Labb4
 
     public class KeyTile : Tile, ITileCollision
     {
-        public DoorTile doorTile { get; set; }
+        public DoorTile PairedDoor { get; set; }
         public KeyTile(DoorTile doorTile)
         {
-            this.doorTile = doorTile;
-            this.representation = 'K';
-            this.isAccessible = true;
-            this.color = this.doorTile.color;
+            this.PairedDoor = doorTile;
+            this.Representation = 'K';
+            this.IsAccessible = true;
+            this.color = this.PairedDoor.color;
         }
 
         public void Collide(Game game)
         {
-            representation = new RoomTile().representation;
+            Representation = new RoomTile().Representation;
             color = new RoomTile().color;
-            doorTile.isAccessible = true;
-            doorTile.representation = ' ';
+            PairedDoor.IsAccessible = true;
+            PairedDoor.Representation = ' ';
         }
     }
 
@@ -146,8 +146,8 @@ namespace Labb4
         public TrapTile()
         {
             this.trapIsActive = true;
-            this.representation = 'T';
-            this.isAccessible = true;
+            this.Representation = 'T';
+            this.IsAccessible = true;
         }
 
         public void Collide(Game game)

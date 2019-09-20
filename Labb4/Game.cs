@@ -25,8 +25,7 @@ namespace Labb4
         public static int TrapMovesPenalty { get => trapMovesPenalty; }
         public static int ButtonMovesBoost { get => buttonMovesBoost; }
 
-        private List<KeyValuePair<string, int>> scores;
-        private StackTrace stackTrace = new StackTrace();
+        private readonly List<KeyValuePair<string, int>> scores;
         public Game()
         {
             this.scores = new List<KeyValuePair<string, int>>();
@@ -206,13 +205,13 @@ namespace Labb4
                 for (int column = 0; column < mapHeight; column++)
                 {
                     Tile currentTile = level.currentRoom.Map[row, column];
-                    char c = currentTile.representation;
+                    char c = currentTile.Representation;
 
                     if (DistanceFromPlayer(row, column) < 2.5)
                     {
-                        currentTile.isVisible = true;
+                        currentTile.IsVisible = true;
                     }
-                    if (!currentTile.isVisible)
+                    if (!currentTile.IsVisible)
                     {
                         c = ' ';
                     }
@@ -232,10 +231,13 @@ namespace Labb4
         }
         private void PrintChar(char c, ConsoleColor consoleColor, int x, int y)
         {
-            CheckConsoleWindowSize();
-            Console.SetCursorPosition(x * 2, y);
-            Console.ForegroundColor = consoleColor;
-            Console.Write(c + " ");
+            try
+            {
+                Console.SetCursorPosition(x * 2, y);
+                Console.ForegroundColor = consoleColor;
+                Console.Write(c + " ");
+            }
+            catch (ArgumentOutOfRangeException) { }
         }
     }
 }
