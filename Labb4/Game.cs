@@ -65,7 +65,7 @@ namespace Labb4
          */
         public void Start()
         {
-            CheckConsoleWindowSize();
+            SetConsoleWindowSize();
 
             maxMovesAllowed = 500;
             this.player = new Player(this, 2, 2, 0);
@@ -74,15 +74,24 @@ namespace Labb4
             this.level = new Level(this);
             GameLoop();
         }
-       
-        private void CheckConsoleWindowSize()
+
+        private void SetConsoleWindowSize()
         {
             if (Console.WindowWidth < 88 || Console.WindowHeight < 10)
             {
                 Console.SetWindowSize(88, 10);
             }
+
             this.mapWidth = Console.WindowWidth / 2;
             this.mapHeight = Console.WindowHeight - 2;
+        }
+
+        private void CheckConsoleWindowSize()
+        {
+            if (Console.WindowWidth != mapWidth || Console.WindowHeight != mapHeight)
+            {
+                Console.SetWindowSize(mapWidth * 2, mapHeight + 2);
+            }
         }
 
         private void GameLoop()
@@ -200,6 +209,7 @@ namespace Labb4
 
         private void Draw()
         {
+            CheckConsoleWindowSize();
             for (int row = 0; row < mapWidth; row++)
             {
                 for (int column = 0; column < mapHeight; column++)
@@ -233,6 +243,7 @@ namespace Labb4
         {
             try
             {
+                Console.CursorVisible = false;
                 Console.SetCursorPosition(x * 2, y);
                 Console.ForegroundColor = consoleColor;
                 Console.Write(c + " ");
