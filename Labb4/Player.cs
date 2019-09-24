@@ -40,7 +40,7 @@
 
         }
 
-        public void HandleCollision(Tile collidingTile)
+        private void HandleCollision(Tile collidingTile)
         {
             if (collidingTile is ITileCollision tile)
             {

@@ -14,7 +14,8 @@ namespace Labb4
 
     public class DoorTile : Tile, ITileCollision
     {
-        public Room leadsTo;
+        private readonly Room leadsTo;
+
         public DoorTile(Game game, ConsoleColor color)
         {
             this.color = color;
@@ -32,7 +33,8 @@ namespace Labb4
 
     public class ReturnDoorTile : Tile, ITileCollision
     {
-        public Room leadsTo;
+        private readonly Room leadsTo;
+
         public ReturnDoorTile(Room previousRoom)
         {
             this.leadsTo = previousRoom;
@@ -50,7 +52,8 @@ namespace Labb4
 
     public class ButtonTile : Tile, ITileCollision
     {
-        public bool buttonIsActive = true;
+        private bool buttonIsActive = true;
+
         public TrapTile TrapTile { get; set; }
         public ButtonTile(TrapTile trapTile)
         {
@@ -122,7 +125,8 @@ namespace Labb4
 
     public class KeyTile : Tile, ITileCollision
     {
-        public DoorTile PairedDoor { get; set; }
+        private readonly DoorTile PairedDoor;
+
         public KeyTile(DoorTile doorTile)
         {
             this.PairedDoor = doorTile;
@@ -143,6 +147,7 @@ namespace Labb4
     public class TrapTile : Tile, ITileCollision
     {
         public bool trapIsActive;
+
         public TrapTile()
         {
             this.trapIsActive = true;

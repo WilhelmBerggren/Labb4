@@ -59,7 +59,7 @@ namespace Labb4
             int monsterCount = new Random().Next(3, game.MapWidth);
             PlaceMonsters(monsterCount);
         }
-        public void PlaceMonsters(int monsters)
+        private void PlaceMonsters(int monsters)
         {
             for (int i = 0; i < monsters; i++)
             {
@@ -67,13 +67,13 @@ namespace Labb4
             }
         }
 
-        public void PlaceKeyDoorPair(DoorTile door)
+        private void PlaceKeyDoorPair(DoorTile door)
         {
             PlaceTile(new KeyTile(door), typeof(RoomTile));
             PlaceTile(door, typeof(WallTile));
         }
 
-        public void PlaceButtonTrapPairs(int pairs)
+        private void PlaceButtonTrapPairs(int pairs)
         {
             for (int i = 0; i < pairs; i++)
             {
@@ -83,7 +83,7 @@ namespace Labb4
             }
         }
 
-        public bool PlaceTile(Tile newTile, Type oldTile)
+        private bool PlaceTile(Tile newTile, Type oldTile)
         {
             bool[,] visited = new bool[map.GetLength(0), map.GetLength(1)];
             int unvisitedCount = map.GetLength(0) * map.GetLength(1);
