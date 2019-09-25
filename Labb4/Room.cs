@@ -4,22 +4,22 @@ namespace Labb4
 {
     public class Room
     {
-        private Tile[,] map;
         private readonly int mapHeight;
         private readonly int mapWidth;
-
-        public Tile[,] Map { get => map; }
-
         private readonly Game game;
+
+        public Tile[,] Map { get; private set; }
+
         public Room(Game game)
         {
             this.game = game;
             this.mapWidth = game.MapWidth;
             this.mapHeight = game.MapHeight;
         }
+
         public void Generate(Room previousRoom)
         {
-            this.map = new Tile[mapWidth, mapHeight];
+            this.Map = new Tile[mapWidth, mapHeight];
             int playerX = game.Player.PosX;
             int playerY = game.Player.PosY;
 
@@ -30,7 +30,7 @@ namespace Labb4
                     // When player enters new room, add a ReturnDoorTile at their position
                     if (row == playerX && column == playerY && previousRoom != null)
                     {
-                        map[row, column] = new ReturnDoorTile(previousRoom);
+                        Map[row, column] = new ReturnDoorTile(previousRoom);
                     }
                     else if (row == 0 || column == 0 || row == mapWidth - 1 || column == mapHeight - 1)
                     {
@@ -39,32 +39,27 @@ namespace Labb4
                             (row == mapWidth - 1 && column == 0) ||
                             (row == mapWidth - 1 && column == mapHeight - 1))
                         {
-                            map[row, column] = new CornerTile();
+                            Map[row, column] = new CornerTile();
                         }
                         else
                         {
-                            map[row, column] = new WallTile();
+                            Map[row, column] = new WallTile();
                         }
                     }
                     else
                     {
-                        map[row, column] = new RoomTile();
+                        Map[row, column] = new RoomTile();
                     }
                 }
             }
+
+            int nrOfTraps = new Random().Next(3, game.MapHeight);
+            int nrOfMonsters = new Random().Next(3, game.MapWidth);
+
             PlaceKeyDoorPair(new DoorTile(game, ConsoleColor.Red));
             PlaceKeyDoorPair(new DoorTile(game, ConsoleColor.Blue));
-            int trapCount= new Random().Next(3, game.MapHeight);
-            PlaceButtonTrapPairs(trapCount);
-            int monsterCount = new Random().Next(3, game.MapWidth);
-            PlaceMonsters(monsterCount);
-        }
-        private void PlaceMonsters(int monsters)
-        {
-            for (int i = 0; i < monsters; i++)
-            {
-                PlaceTile(new MonsterTile(), typeof(RoomTile));
-            }
+            PlaceButtonTrapPairs(nrOfTraps);
+            PlaceMonsters(nrOfMonsters);
         }
 
         private void PlaceKeyDoorPair(DoorTile door)
@@ -83,10 +78,18 @@ namespace Labb4
             }
         }
 
+        private void PlaceMonsters(int monsters)
+        {
+            for (int i = 0; i < monsters; i++)
+            {
+                PlaceTile(new MonsterTile(), typeof(RoomTile));
+            }
+        }
+
         private bool PlaceTile(Tile newTile, Type oldTile)
         {
-            bool[,] visited = new bool[map.GetLength(0), map.GetLength(1)];
-            int unvisitedCount = map.GetLength(0) * map.GetLength(1);
+            bool[,] visited = new bool[Map.GetLength(0), Map.GetLength(1)];
+            int unvisitedCount = Map.GetLength(0) * Map.GetLength(1);
             while (unvisitedCount > 0)
             {
                 int posX = new Random().Next(0, this.mapWidth);
@@ -94,11 +97,11 @@ namespace Labb4
 
                 if (visited[posX, posY] != true)
                 {
-                    if (map[posX, posY].GetType() == oldTile &&
+                    if (Map[posX, posY].GetType() == oldTile &&
                         (posX != game.Player.PosX ||
                         posY != game.Player.PosY))
                     {
-                        map[posX, posY] = newTile;
+                        Map[posX, posY] = newTile;
                         return true;
                     }
                 }

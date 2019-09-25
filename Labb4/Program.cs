@@ -6,10 +6,7 @@ namespace Labb4
     {
         public static void Main()
         {
-            Console.SetWindowSize(88, 10);
-
-            Console.WriteLine("Movement keys: WASD\n" +
-                "Press 'L' in-game for legend.\n\n" +
+            Console.WriteLine("Press 'L' in-game to view legend.\n\n" +
                 "Press any key to start!");
             Console.ReadKey();
 
@@ -22,5 +19,5 @@ namespace Labb4
  * Highscore:
  * Wilhelm: 6 rooms
  * Simon: 5 rooms
- * Nils den Försck: 5 rooms
+ * Nils: 5 rooms
  */
